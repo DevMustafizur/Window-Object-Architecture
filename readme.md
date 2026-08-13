@@ -1,518 +1,476 @@
-# What is the Window Object?
+# window object
 
-The **`window` object** is the **global object** provided by the web browser for every web page. It represents the browser window (or tab) where a page is running and serves as the **root object** of the browser's JavaScript environment.
+## 1. What is the Window Object?
 
-When a browser loads a web page, it automatically creates a `window` object before executing any JavaScript code. This object provides access to the **Browser Object Model (BOM)**, the **Document Object Model (DOM)**, and many built-in **Web APIs**.
-
-## Definition
-
-> **The `window` object is the global object of the browser environment. It represents the current browser window or tab and provides access to browser features, the DOM, and Web APIs.**
-
-
-
-# How Are the Properties of the `window` Object Created?
-
-## Question
-
-**How are the properties of the `window` object created?**
-
-## Answer
-
-The properties of the `window` object are created **by the browser**, not by JavaScript.
-
-When a web page is loaded, the browser initializes a JavaScript environment and creates the `window` object. It then creates or exposes various built-in browser objects, functions, constructors, and values, attaching them as properties of `window`.
-
-
-## How Are the Built-in Properties and Methods of the `window` Object Created and Attached Internally?
-
-### Answer
-
-The built-in members of the `window` object are provided by the **browser's native implementation**, not created by JavaScript code.
-
-These members can generally be divided into two categories:
-
-1. **Object properties** — such as `document`, `location`, `history`, and `navigator`
-2. **Methods** — such as `alert()`, `confirm()`, `prompt()`, `print()`, and `setTimeout()`
+**Answer:**
+The `window` object is the global object of the **Browser JavaScript Runtime**. It represents the browser window/tab and provides access to browser features such as `document`, `location`, `history`, and `navigator`.
 
 ---
 
-### 1. Object Properties
+## 2. What are the main components of Browser JavaScript Runtime?
 
-For many browser objects, the browser internally creates an object using its native implementation and then exposes that object through the `window` object.
-
-Examples include:
-
-* `Document`
-* `Location`
-* `History`
-* `Navigator`
-* `Screen`
-* `Storage`
-
-Conceptually:
+**Answer:**
 
 ```text
-Internal Native Classes
+Browser JavaScript Runtime
 │
-├── Document
-├── Location
-├── History
-├── Navigator
-├── Screen
-└── Storage
-        │
-        ▼
-Create Object Instances
-        │
-        ▼
-Expose Objects through Window
-```
-
-Conceptually, this can be represented as:
-
-```javascript
-const document = new Document();
-const location = new Location();
-const history = new History();
-const navigator = new Navigator();
-
-window.document = document;
-window.location = location;
-window.history = history;
-window.navigator = navigator;
-```
-
-The actual browser implementation is much more complex and does **not necessarily use JavaScript `new` expressions** like the example above. The example only demonstrates the relationship between the internal object instances and their `window` properties.
-
----
-
-### 2. Window Methods
-
-Some members of `window` are functions rather than objects.
-
-Examples:
-
-```javascript
-window.alert();
-window.confirm();
-window.prompt();
-window.print();
-window.open();
-window.close();
-window.setTimeout();
-window.setInterval();
-window.requestAnimationFrame();
-```
-
-These methods are implemented by the browser's **native code** and exposed to JavaScript as methods of the `Window` interface.
-
-Importantly, there is generally **no separate JavaScript class such as `Alert`, `Confirm`, or `Prompt`** whose instances provide these methods.
-
-It is therefore incorrect to think of them like this:
-
-```javascript
-const alertObject = new Alert();      // ❌
-const confirmObject = new Confirm();  // ❌
-
-window.alert = alertObject.alert;
-window.confirm = confirmObject.confirm;
-```
-
-Instead, conceptually, they are exposed as native functions belonging to the `Window` interface:
-
-```text
-Browser Native Implementation
-        │
-        ▼
-      Window
-        │
-        ├── alert()              ← native method
-        ├── confirm()            ← native method
-        ├── prompt()             ← native method
-        ├── print()              ← native method
-        ├── open()               ← native method
-        ├── close()              ← native method
-        ├── setTimeout()         ← native method
-        └── requestAnimationFrame()
-```
-
-From JavaScript, they are accessed as:
-
-```javascript
-window.alert("Hello");
-window.confirm("Are you sure?");
-window.prompt("Enter your name");
-```
-
-Because `window` is the global object, the `window.` prefix can usually be omitted:
-
-```javascript
-alert("Hello");
-
-confirm("Are you sure?");
-
-prompt("Enter your name");
+├── Window Object
+├── Web APIs
+├── JavaScript Engine
+│   └── V8
+├── Call Stack
+├── Microtask Queue
+├── Task Queue
+├── Event Loop
+└── Rendering System
 ```
 
 ---
 
-## Important Distinction
+## 3. What is a JavaScript Engine?
+
+**Answer:**
+A JavaScript Engine parses, compiles, and executes JavaScript code. Chrome uses the **V8 JavaScript Engine**.
+
+---
+
+## 4. Where does the Window Object exist?
+
+**Answer:**
+The Window Object exists as part of the **Browser JavaScript Runtime** and acts as the global object of a browser page.
+
+---
+
+## 5. What is the relationship between Window Object and V8?
+
+**Answer:**
+The Window Object is provided by the browser runtime, while V8 executes the JavaScript code that accesses the Window Object.
+
+### Relationship
 
 ```text
-Window
+Browser JavaScript Runtime
 │
-├── Object Properties
+├── Window Object
+│
+├── Web APIs
+│
+└── JavaScript Engine
+    └── V8
+```
+
+### Flow
+
+```text
+JavaScript Code
+      ↓
+     V8
+      ↓
+Access Window Object
+      ↓
+Browser-provided Window
+```
+
+---
+
+## 6. Is the Window Object part of V8?
+
+**Answer:**
+No. The Window Object is provided by the browser. V8 is the JavaScript engine that executes JavaScript.
+
+```text
+Browser JavaScript Runtime
+│
+├── Window Object     ← Browser-provided
+├── Web APIs          ← Browser-provided
+│
+└── JavaScript Engine
+    └── V8            ← JavaScript Engine
+```
+
+---
+
+## 7. Who creates the Window Object?
+
+**Answer:**
+The browser creates and manages the Window Object through its native implementation and exposes it to JavaScript.
+
+---
+
+## 8. Why can JavaScript directly use `window`?
+
+**Answer:**
+Because the browser exposes the Window Object as the global object of the browser's JavaScript environment.
+
+```javascript
+console.log(window);
+console.log(window.document);
+console.log(window.location);
+```
+
+---
+
+## 9. What is the architecture of the Window Object?
+
+**Answer:**
+
+```text
+Browser JavaScript Runtime
+│
+├── JavaScript Engine
+│   └── V8
+│       ├── Parser
+│       ├── Compiler
+│       ├── Heap
+│       ├── Call Stack
+│       └── JavaScript Execution
+│
+├── Window Object
+│   ├── DOM
+│   │   └── document
 │   │
-│   ├── document   → Document object
-│   ├── location   → Location object
-│   ├── history    → History object
-│   ├── navigator  → Navigator object
-│   └── screen     → Screen object
+│   ├── BOM
+│   │   ├── location
+│   │   ├── history
+│   │   ├── navigator
+│   │   └── screen
+│   │
+│   └── Storage
+│       ├── localStorage
+│       └── sessionStorage
 │
-└── Methods
-    │
-    ├── alert()              → native Window method
-    ├── confirm()            → native Window method
-    ├── prompt()             → native Window method
-    ├── print()              → native Window method
-    ├── open()               → native Window method
-    ├── close()              → native Window method
-    └── setTimeout()         → browser-provided function
+├── Web APIs
+│   ├── Timers
+│   ├── Fetch
+│   ├── WebSocket
+│   └── Other APIs
+│
+├── Task Queue
+├── Microtask Queue
+├── Event Loop
+└── Rendering System
 ```
 
-### Summary
+---
 
-The browser does not create every `window` member in the same way.
+## 10. What are some important properties and APIs available through Window?
 
-**Object properties** such as `document`, `location`, and `history` represent browser-created objects that are exposed through `window`.
-
-**Methods** such as `alert()`, `confirm()`, and `prompt()` are browser-provided native functions exposed through the `Window` interface. They do not require separate JavaScript classes such as `Alert`, `Confirm`, or `Prompt`.
-
-> **Note:** The exact internal implementation differs between browser engines. The `new Class()` examples above are conceptual models used to explain the relationship; they should not be interpreted as the browser's actual source code.
-
-
-
-## Question
-
-**What is the prototype chain of the `window` object?**
-
-## Answer
-
-Like every JavaScript object, the `window` object inherits properties and methods through a **prototype chain**.
-
-The prototype chain of the `window` object is:
+**Answer:**
+Some important examples include:
 
 ```text
 window
-   │
-   ▼
-Window.prototype
-   │
-   ▼
-EventTarget.prototype
-   │
-   ▼
-Object.prototype
-   │
-   ▼
-null
+├── document
+├── location
+├── history
+├── navigator
+├── screen
+├── localStorage
+├── sessionStorage
+├── console
+├── innerWidth
+├── innerHeight
+├── setTimeout()
+├── setInterval()
+└── requestAnimationFrame()
 ```
 
-### Explanation
-
-* **`window`** is the actual global object created by the browser.
-* **`Window.prototype`** contains methods and properties shared by all `Window` objects.
-* **`EventTarget.prototype`** allows the `window` object to dispatch and listen for events, such as `click`, `load`, and `resize`, using methods like `addEventListener()` and `removeEventListener()`.
-* **`Object.prototype`** provides the standard JavaScript object methods, such as `toString()`, `hasOwnProperty()`, and `valueOf()`.
-* **`null`** marks the end of the prototype chain.
-
-### Example
-
-```javascript
-window instanceof Window;      // true
-window instanceof EventTarget; // true
-window instanceof Object;      // true
-
-Object.getPrototypeOf(window) === Window.prototype; // true
-```
-
-Therefore, the `window` object inherits functionality from `Window.prototype`, which in turn inherits from `EventTarget.prototype`, and finally from `Object.prototype`.
-
-
-# What Properties Does the `window` Object Contain?
-
-The `window` object is the **root object** of the browser's JavaScript environment. It contains **hundreds of built-in properties** that expose the browser's features, JavaScript built-in objects, DOM, BOM, Web APIs, global methods, constructors, and global values.
-
-These properties are created and exposed by the browser before your JavaScript code begins executing.
-
-## Categories of `window` Properties
-
-The properties of the `window` object can be grouped into the following categories.
-
-### 1. DOM Properties
-
-These properties provide access to the Document Object Model (DOM).
-
-**Examples**
-
-* `document`
-* `customElements`
-
 ---
 
-### 2. Browser Object Model (BOM) Properties
+## 11. Is `document` the same object as `window`?
 
-These properties provide access to browser-specific objects.
+**Answer:**
+No. They are different objects.
 
-**Examples**
-
-* `location`
-* `history`
-* `navigator`
-* `screen`
-
----
-
-### 3. Window Relationship Properties
-
-These properties describe the relationship between browser windows, tabs, and frames.
-
-**Examples**
-
-* `parent`
-* `top`
-* `self`
-* `frames`
-* `opener`
-* `length`
-
----
-
-### 4. Storage Properties
-
-These properties provide access to browser storage.
-
-**Examples**
-
-* `localStorage`
-* `sessionStorage`
-* `indexedDB`
-* `caches`
-
----
-
-### 5. Performance and Security Properties
-
-These properties expose browser performance and security features.
-
-**Examples**
-
-* `performance`
-* `crypto`
-* `origin`
-* `trustedTypes`
-* `isSecureContext`
-* `crossOriginIsolated`
-
----
-
-### 6. Global Methods
-
-These are built-in browser functions that are available globally.
-
-**Examples**
-
-* `fetch()`
-* `alert()`
-* `confirm()`
-* `prompt()`
-* `print()`
-* `open()`
-* `close()`
-* `setTimeout()`
-* `clearTimeout()`
-* `setInterval()`
-* `clearInterval()`
-* `requestAnimationFrame()`
-
----
-
-### 7. JavaScript Constructors
-
-The browser exposes JavaScript's built-in constructors through the `window` object.
-
-**Examples**
-
-* `Object`
-* `Array`
-* `String`
-* `Number`
-* `Boolean`
-* `Date`
-* `Math`
-* `JSON`
-* `Map`
-* `Set`
-* `WeakMap`
-* `WeakSet`
-* `Promise`
-* `Symbol`
-* `BigInt`
-* `Error`
-
----
-
-### 8. DOM Constructors
-
-The browser also exposes DOM-related constructors.
-
-**Examples**
-
-* `Node`
-* `Element`
-* `Attr`
-* `Text`
-* `Comment`
-* `Document`
-* `DocumentFragment`
-* `HTMLElement`
-* `HTMLDivElement`
-* `HTMLImageElement`
-* `HTMLAnchorElement`
-
----
-
-### 9. Event Constructors
-
-These constructors are used to create browser events.
-
-**Examples**
-
-* `Event`
-* `UIEvent`
-* `MouseEvent`
-* `KeyboardEvent`
-* `PointerEvent`
-* `FocusEvent`
-* `InputEvent`
-* `CustomEvent`
-
----
-
-### 10. Network and Communication APIs
-
-These properties expose networking features.
-
-**Examples**
-
-* `fetch`
-* `XMLHttpRequest`
-* `WebSocket`
-* `EventSource`
-* `BroadcastChannel`
-* `MessageChannel`
-
----
-
-### 11. Global Values
-
-These are built-in JavaScript global values.
-
-**Examples**
-
-* `Infinity`
-* `NaN`
-* `undefined`
-
----
-
-### 12. Global Utility Functions
-
-These are built-in JavaScript utility functions.
-
-**Examples**
-
-* `parseInt()`
-* `parseFloat()`
-* `isNaN()`
-* `isFinite()`
-* `encodeURI()`
-* `decodeURI()`
-* `encodeURIComponent()`
-* `decodeURIComponent()`
-* `atob()`
-* `btoa()`
-* `structuredClone()`
-
----
-
-## Conceptual Structure
+`window` is the global browser object, while `document` represents the current HTML document.
 
 ```text
 Window
 │
-├── DOM
-│   ├── document
-│   └── customElements
+└── document
+    │
+    └── DOM Tree
+```
+
+---
+
+## 12. What is the relationship between Window and DOM?
+
+**Answer:**
+The browser creates the DOM and exposes the `document` object through the Window Object.
+
+```text
+Browser JavaScript Runtime
 │
-├── Browser Object Model (BOM)
+└── Window Object
+    │
+    └── document
+        │
+        └── DOM Tree
+            ├── html
+            ├── head
+            └── body
+```
+
+---
+
+## 13. What is the relationship between Window and BOM?
+
+**Answer:**
+BOM means **Browser Object Model**. It refers to browser-related objects and features such as `location`, `history`, `navigator`, and `screen`.
+
+```text
+Window Object
+│
+├── location
+├── history
+├── navigator
+└── screen
+```
+
+---
+
+## 14. Is `setTimeout()` implemented by V8?
+
+**Answer:**
+No. The browser provides the timer API, while V8 executes the JavaScript code that calls it.
+
+```text
+JavaScript
+    ↓
+V8
+    ↓
+Browser Timer API
+    ↓
+Task Queue
+    ↓
+Event Loop
+    ↓
+Call Stack
+```
+
+---
+
+## 15. Where does the Task Queue exist?
+
+**Answer:**
+The Task Queue is part of the **Browser JavaScript Runtime's event-loop system**. It stores tasks that are ready to be processed by JavaScript.
+
+```text
+Browser JavaScript Runtime
+│
+├── JavaScript Engine
+│   └── V8
+│       └── Call Stack
+│
+├── Task Queue
+├── Microtask Queue
+└── Event Loop
+```
+
+---
+
+## 16. Where does the Microtask Queue exist?
+
+**Answer:**
+The Microtask Queue is part of the JavaScript asynchronous execution model. It contains jobs such as Promise callbacks and is processed by the event-loop mechanism.
+
+Examples:
+
+* Promise callbacks
+* `queueMicrotask()`
+* `MutationObserver` callbacks
+
+```text
+Browser JavaScript Runtime
+│
+├── JavaScript Engine
+│   └── V8
+│
+├── Microtask Queue
+│
+└── Event Loop
+```
+
+---
+
+## 17. Where does the Event Loop exist?
+
+**Answer:**
+The Event Loop is part of the **Browser JavaScript Runtime**. It coordinates the Call Stack, Task Queue, Microtask Queue, and browser processing.
+
+```text
+Browser JavaScript Runtime
+│
+├── JavaScript Engine
+│   └── V8
+│       └── Call Stack
+│
+├── Task Queue
+├── Microtask Queue
+└── Event Loop
+```
+
+---
+
+## 18. What happens when JavaScript accesses `window.document`?
+
+**Answer:**
+V8 executes the JavaScript expression, and the browser-provided Window Object provides access to the `document` object.
+
+```text
+JavaScript Code
+      ↓
+     V8
+      ↓
+window.document
+      ↓
+Window Object
+      ↓
+document
+      ↓
+DOM
+```
+
+---
+
+## 19. Do all Window properties come from V8?
+
+**Answer:**
+No. Browser-specific properties and APIs are provided by the browser, while V8 provides JavaScript language features and built-in objects.
+
+```text
+Browser JavaScript Runtime
+│
+├── JavaScript Engine
+│   └── V8
+│       ├── Object
+│       ├── Array
+│       ├── Promise
+│       ├── Map
+│       └── Function
+│
+└── Window Object
+    ├── document
+    ├── location
+    ├── history
+    ├── navigator
+    └── localStorage
+```
+
+---
+
+## 20. How does the browser expose native browser features to JavaScript?
+
+**Answer:**
+The browser implements browser features natively and exposes JavaScript-accessible interfaces for those features.
+
+```text
+Browser JavaScript Runtime
+│
+├── Browser Native Implementation
+│   ├── Window
+│   ├── Document
+│   ├── Location
+│   ├── History
+│   └── Navigator
+│
+├── Web APIs
+│
+└── JavaScript Engine
+    └── V8
+        └── JavaScript Code
+```
+
+---
+
+# Complete Browser JavaScript Runtime Architecture
+
+This is the **main architecture** of the entire topic. It should be kept once at the end instead of repeating the complete structure throughout the README.
+
+```text
+Browser JavaScript Runtime
+│
+├── Window Object
+│   ├── document
 │   ├── location
 │   ├── history
 │   ├── navigator
-│   └── screen
-│
-├── Window Relationships
-│   ├── parent
-│   ├── top
-│   ├── self
-│   └── opener
-│
-├── Storage
+│   ├── screen
 │   ├── localStorage
-│   ├── sessionStorage
-│   └── indexedDB
+│   └── sessionStorage
 │
-├── Performance & Security
-│   ├── performance
-│   ├── crypto
-│   └── isSecureContext
+├── Web APIs
+│   ├── DOM APIs
+│   ├── Timer APIs
+│   ├── Fetch API
+│   ├── WebSocket
+│   └── Other Web APIs
 │
-├── Global Methods
-│   ├── fetch()
-│   ├── alert()
-│   ├── setTimeout()
-│   └── requestAnimationFrame()
+├── JavaScript Engine
+│   └── V8
+│       ├── Parser
+│       ├── Compiler
+│       ├── Heap
+│       ├── Call Stack
+│       └── JavaScript Execution
 │
-├── JavaScript Constructors
-│   ├── Object
-│   ├── Array
-│   ├── Promise
-│   └── Map
-│
-├── DOM Constructors
-│   ├── Node
-│   ├── Element
-│   ├── Document
-│   └── HTMLElement
-│
-├── Event Constructors
-│   ├── Event
-│   ├── MouseEvent
-│   └── KeyboardEvent
-│
-├── Network APIs
-│   ├── fetch
-│   ├── XMLHttpRequest
-│   └── WebSocket
-│
-└── Global Values & Utilities
-    ├── Infinity
-    ├── NaN
-    ├── parseInt()
-    └── encodeURI()
+├── Microtask Queue
+├── Task Queue
+├── Event Loop
+└── Rendering System
 ```
 
-## Summary
+## Core Relationships
 
-The `window` object acts as the **central access point** to the browser environment. Almost everything provided by the browser—such as the DOM, Browser Object Model (BOM), Web APIs, JavaScript constructors, event constructors, global methods, storage, networking, and browser information—is exposed through the `window` object as its properties. Because of this, the `window` object is considered the **entry point to the browser's JavaScript environment**.
+```text
+Window Object
+     │
+     ├── document ──→ DOM
+     ├── location
+     ├── history
+     ├── navigator
+     └── storage
 
+
+Web APIs
+     │
+     ├── Timers
+     ├── Fetch
+     ├── WebSocket
+     └── DOM APIs
+
+
+JavaScript Engine
+     │
+     └── V8
+         └── Executes JavaScript
+
+
+Asynchronous Flow
+     │
+     ├── Web APIs
+     │
+     ├── Task Queue
+     ├── Microtask Queue
+     │
+     └── Event Loop
+             ↓
+         Call Stack
+             ↓
+            V8
+```
+
+## Core Idea
+
+> **V8 executes JavaScript.**
+
+> **Window provides the browser's global object.**
+
+> **Web APIs provide browser capabilities.**
+
+> **Task Queue and Microtask Queue hold asynchronous work.**
+
+> **Event Loop coordinates when queued work can enter the Call Stack.**
+
+> **The Browser JavaScript Runtime is the complete environment that brings these pieces together.**
